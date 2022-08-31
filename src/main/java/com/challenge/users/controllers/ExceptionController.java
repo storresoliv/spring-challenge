@@ -20,7 +20,7 @@ public class ExceptionController {
     private int MAX_CHARS = 135;
 
     private ResponseEntity<ErrorDto> handleResponse(HttpStatus status, String message, Exception ex) {
-        log.info(String.format("[Error][%s] %s", ex.getClass().toString(), ex.getMessage().toString()));
+        log.info(String.format("[Error Handler][%s] %s", ex.getClass().toString(), ex.getMessage().toString()));
 
         if (message.length() >= this.MAX_CHARS) {
             message = String.format("%s...", message.substring(0, MAX_CHARS));

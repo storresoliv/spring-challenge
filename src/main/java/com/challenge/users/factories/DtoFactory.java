@@ -37,4 +37,13 @@ public class DtoFactory {
                 .isActive(user.isActive())
                 .build();
     }
+
+    public static final PhoneRequestDto createPhoneRequestDto(String number, String cityCode, String countryCode) {
+        return PhoneRequestDto
+                .builder()
+                .number(number)
+                .citycode(cityCode)
+                .countrycode(countryCode)
+                .build();
+    }
 }

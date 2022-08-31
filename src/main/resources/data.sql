@@ -1,0 +1,1 @@
+insert into users (created, email, is_active, last_login, modified, name, password, token, id) values ('2022-08-31 13:05:01.928', 'test@test.cl', true, '2022-08-31 13:05:01.928', '2022-08-31 13:05:01.928', 'test', 'passTest', 'eyJhbGciOiJub25lIn0.eyJpYXQiOjE2NjE5NjU1MDF9.', '84dc5361-737d-4c4a-a04e-85717b68ece0')

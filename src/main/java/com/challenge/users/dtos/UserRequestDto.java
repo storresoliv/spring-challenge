@@ -1,15 +1,20 @@
 package com.challenge.users.dtos;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Builder;
+import lombok.Data;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
-@Getter
-@Setter
+@Data
+@Builder
 public class UserRequestDto {
+    @NotNull
     private String name;
+    @NotNull
     private String email;
+    @NotNull
     private String password;
-    private List<PhoneDto> phones;
+    @NotNull
+    private List<PhoneRequestDto> phones;
 }

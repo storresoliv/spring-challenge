@@ -1,18 +1,20 @@
 package com.challenge.users.entities;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.util.UUID;
 
 @Entity()
-@Table(name = "Phones")
+@Table(name = "phones")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
-@Getter
-@Setter
 public class PhonesEntity {
 
     @Id

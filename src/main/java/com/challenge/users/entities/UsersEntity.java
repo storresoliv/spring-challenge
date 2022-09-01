@@ -7,9 +7,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
-import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Pattern;
 import java.sql.Timestamp;
 import java.util.List;
 import java.util.UUID;
@@ -29,14 +27,12 @@ public class UsersEntity {
     private UUID id;
 
     @Column(unique = true)
-    @Email
     private String email;
 
     @NotBlank
     private String name;
 
-    @Pattern(regexp = "^(?=.*[A-Z])(?=.*[0-9].*[0-9])(?=.*[a-z].*[a-z]).{5,}$",
-            message = "Password must contain one upper char, at least two lower chars and at least two numbers")
+
     private String password;
 
     @OneToMany

@@ -1,26 +1,35 @@
 package com.challenge.users.repositories;
 
-import com.challenge.users.dtos.UserRequestDto;
+import com.challenge.users.dtos.UserRequestDTO;
 import com.challenge.users.entities.UsersEntity;
-import com.challenge.users.factories.DtoFactory;
-import com.challenge.users.factories.EntityFactory;
+import com.challenge.users.mappers.UserRequestDTOMapper;
+import com.challenge.users.mappers.UsersEntityMapper;
+import com.challenge.users.services.UsersValidationService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureTestEntityManager;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@DataJpaTest
+@SpringBootTest()
+@AutoConfigureTestDatabase
+@AutoConfigureTestEntityManager
+@EnableJpaRepositories
 public class UsersRepositoryTest {
+    private UsersEntityMapper usersEntityMapper;
     private Validator validator;
 
     @Autowired
@@ -29,42 +38,28 @@ public class UsersRepositoryTest {
     @Autowired
     private TestEntityManager entityManager;
 
+    @Autowired
+    private UsersValidationService usersValidationService;
+
+    @Autowired
+    private UserRequestDTOMapper userRequestDTOMapper;
+
     @BeforeEach
     public void init() {
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-        validator = factory.getValidator();
+        this.validator = factory.getValidator();
+
+        usersEntityMapper = new UsersEntityMapper(usersValidationService);
     }
 
     @Test
     public void shouldSaveUser() {
-        UserRequestDto userRequestDto = DtoFactory.createUserRequestDto("testName", "test@test", "Aaa11", Collections.EMPTY_LIST);
-        UsersEntity usersEntity = EntityFactory.createUsersEntity(userRequestDto, Collections.EMPTY_LIST);
+        UserRequestDTO userRequestDto = this.userRequestDTOMapper.createUserRequestDto("testName", "test@test", "Aaa11", new ArrayList<>());
+        UsersEntity usersEntity = this.usersEntityMapper.createUsersEntity(userRequestDto, new ArrayList<>());
 
-        Set<ConstraintViolation<UsersEntity>> violations = validator.validate(usersRepository.save(usersEntity));
+        Set<ConstraintViolation<UsersEntity>> violations = this.validator.validate(this.usersRepository.save(usersEntity));
 
         assertTrue(violations.isEmpty());
-        assertNotNull(entityManager.getId(usersEntity));
-    }
-
-    @Test
-    public void shouldInvalidEmail() {
-        UserRequestDto userRequestDto = DtoFactory.createUserRequestDto("testName", "testtest", "Aaa11", Collections.EMPTY_LIST);
-
-        UsersEntity usersEntity = EntityFactory.createUsersEntity(userRequestDto, Collections.EMPTY_LIST);
-
-        Set<ConstraintViolation<UsersEntity>> violations = validator.validate(usersRepository.save(usersEntity));
-
-        assertFalse(violations.isEmpty());
-    }
-
-    @Test
-    public void shouldInvalidPassword() {
-        UserRequestDto userRequestDto = DtoFactory.createUserRequestDto("testName", "test@test", "Aaaaaaa", Collections.EMPTY_LIST);
-
-        UsersEntity usersEntity = EntityFactory.createUsersEntity(userRequestDto, Collections.EMPTY_LIST);
-
-        Set<ConstraintViolation<UsersEntity>> violations = validator.validate(usersRepository.save(usersEntity));
-
-        assertFalse(violations.isEmpty());
+        assertNotNull(this.entityManager.getId(usersEntity));
     }
 }

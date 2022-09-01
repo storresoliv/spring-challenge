@@ -1,32 +1,48 @@
 package com.challenge.users.repositories;
 
-import com.challenge.users.dtos.PhoneRequestDto;
+import com.challenge.users.dtos.PhoneRequestDTO;
 import com.challenge.users.entities.PhonesEntity;
-import com.challenge.users.factories.DtoFactory;
-import com.challenge.users.factories.EntityFactory;
+import com.challenge.users.mappers.PhoneRequestDTOMapper;
+import com.challenge.users.mappers.PhonesEntityMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureTestEntityManager;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-@DataJpaTest
+@SpringBootTest()
+@AutoConfigureTestDatabase
+@AutoConfigureTestEntityManager
+@EnableJpaRepositories
 public class PhonesRepositoryTest {
+    @Autowired
+    private PhonesRepository phonesRepository;
 
     @Autowired
-    private PhonesRepository phonesRepository ;
+    private PhoneRequestDTOMapper phoneRequestDTOMapper;
+
+    @Autowired
+    private PhonesEntityMapper phonesEntityMapper;
 
     @Autowired
     private TestEntityManager entityManager;
 
     @Test
     public void shouldSavePhone() {
-        PhoneRequestDto phoneRequestDto = DtoFactory.createPhoneRequestDto("1234", "51", "02");
-        PhonesEntity phonesEntity = EntityFactory.createPhonesEntity(phoneRequestDto);
+        PhoneRequestDTO phoneRequestDto = this.phoneRequestDTOMapper.createPhoneRequestDto("1234", "51", "02");
 
-        phonesRepository.save(phonesEntity);
+        assertNotNull(phoneRequestDto);
 
-        assertNotNull(entityManager.getId(phonesEntity));
+        PhonesEntity phonesEntity = this.phonesEntityMapper.createPhonesEntity(phoneRequestDto);
+
+        assertNotNull(phonesEntity);
+
+        this.phonesRepository.save(phonesEntity);
+
+        assertNotNull(this.entityManager.getId(phonesEntity));
     }
 }

@@ -1,7 +1,7 @@
 package com.challenge.users.controllers;
 
-import com.challenge.users.dtos.UserRequestDto;
-import com.challenge.users.dtos.UserResponseDto;
+import com.challenge.users.dtos.UserRequestDTO;
+import com.challenge.users.dtos.UserResponseDTO;
 import com.challenge.users.services.UsersService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,8 +13,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
-
 @RestController
 @RequestMapping(value = "/users", consumes = MediaType.APPLICATION_JSON_VALUE)
 @Slf4j
@@ -24,7 +22,7 @@ public class UsersController {
     private UsersService usersService;
 
     @PostMapping()
-    public ResponseEntity<UserResponseDto> createUser(@Valid @RequestBody UserRequestDto userRequestDto) {
+    public ResponseEntity<UserResponseDTO> createUser(@RequestBody UserRequestDTO userRequestDto) throws Exception {
         return ResponseEntity.status(HttpStatus.CREATED).body(usersService.createUser(userRequestDto));
     }
 }

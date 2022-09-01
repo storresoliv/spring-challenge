@@ -8,7 +8,7 @@ import java.util.UUID;
 
 @Data
 @Builder
-public class UserResponseDto {
+public class UserResponseDTO {
     private UUID id;
     private Timestamp created;
     private Timestamp modified;
